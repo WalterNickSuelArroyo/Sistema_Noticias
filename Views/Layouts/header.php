@@ -54,7 +54,7 @@
       <div class="sidebar">
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li id="gestion_trabajadores" class="nav-item">
+            <li id="noticias_menu" class="nav-item">
               <a href="Views/noticias.php" class="nav-link">
                 <i class="nav-icon fas fa-user"></i>
                 <p>
@@ -62,7 +62,7 @@
                 </p>
               </a>
             </li>
-            <li id="gestion_zonas" class="nav-item">
+            <li id="citaciones" class="nav-item">
               <a href="Views/citas.php" class="nav-link">
                 <i class="nav-icon fas fa-map-marker-alt"></i>
                 <p>
@@ -71,7 +71,7 @@
               </a>
             </li>
             <li id="admin_usuarios" class="nav-item">
-              <a href="Views/camiones.php" class="nav-link">
+              <a href="Views/adminUsuarios.php" class="nav-link">
                 <i class="nav-icon fas fa-truck"></i>
                 <p>
                   Admin. Usuarios

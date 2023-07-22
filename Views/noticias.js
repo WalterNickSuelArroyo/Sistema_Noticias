@@ -12,7 +12,6 @@ $(document).ready(function () {
                 $('#usuario_nav').text(sesion.nombres);
             } else {
                 $('#nav_usuario').hide();
-                location.href = 'login.php';
             }
         })
     }
@@ -42,7 +41,7 @@ $(document).ready(function () {
                                         <span class="text-muted float-left">${noticia.titulo}</span><br>
                                         <span>${noticia.texto}</span><br>
                                         <span>Fecha de publicacion: ${noticia.fecha}</span><br>
-                                        <span>Autor: ${noticia.id_user} - ${noticia.nombres} ${noticia.apellidos}</span>
+                                        <span>Autor: ${noticia.nombres} ${noticia.apellidos}</span>
                                     </div>
                                 </div>
                             </div>
@@ -62,6 +61,5 @@ $(document).ready(function () {
                 text: 'Hubo conflicto de codigo: ' + data.status,
             })
         }
-        
     }
 })

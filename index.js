@@ -1,6 +1,5 @@
 $(document).ready(function () {
     verificar_sesion();
-    llenar_zonas();
     function verificar_sesion() {
         funcion = 'verificar_sesion';
         $.post('controllers/UsuarioController.php', { funcion }, (response) => {

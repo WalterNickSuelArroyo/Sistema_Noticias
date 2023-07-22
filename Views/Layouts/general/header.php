@@ -51,15 +51,9 @@
         <span class="brand-text font-weight-light">NoticiasWeb</span>
       </a>
       <div class="sidebar">
-        <!-- Sidebar user (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-          <div class="info">
-            <a id="usuario_menu" href="../index.php" class="d-block"></a>
-          </div>
-        </div>
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-item" id="gestion_trabajadores">
+            <li class="nav-item" id="noticias_menu">
               <a href="noticias.php" class="nav-link">
                 <i class="nav-icon fas fa-user"></i>
                 <p>
@@ -67,7 +61,7 @@
                 </p>
               </a>
             </li>
-            <li class="nav-item" id="gestion_zonas">
+            <li class="nav-item" id="citaciones">
               <a href="citas.php" class="nav-link">
                 <i class="nav-icon fas fa-map-marker-alt"></i>
                 <p>
@@ -76,7 +70,7 @@
               </a>
             </li>
             <li class="nav-item" id="admin_usuarios">
-              <a href="camiones.php" class="nav-link">
+              <a href="adminUsuarios.php" class="nav-link">
                 <i class="nav-icon fas fa-truck"></i>
                 <p>
                   Admin. de Usuarios

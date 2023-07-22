@@ -63,7 +63,6 @@ if ($_POST['funcion'] == 'editar_datos') {
     $email = $_POST['email_mod'];
     $telefono = $_POST['telefono_mod'];
     $usuario->obtener_datos($id_usuario);
-    $datos_cambiados='ha echo los siguientes cambios: ';
     if ($nombres!=$usuario->objetos[0]->nombres||$apellidos!=$usuario->objetos[0]->apellidos||$direccion!=$usuario->objetos[0]->direccion||$email!=$usuario->objetos[0]->email||$telefono!=$usuario->objetos[0]->telefono) {
         $usuario->editar_datos($id_usuario, $nombres, $apellidos, $direccion, $email, $telefono);
         echo 'success';
@@ -91,45 +90,62 @@ if ($_POST['funcion'] == 'cambiar_contra') {
         echo 'error';
     }
 }
-if ($_POST['funcion'] == 'read_all_trabajadores') {
-    $usuario->read_all_trabajadores();
+if ($_POST['funcion'] == 'read_all_usuarios') {
+    $usuario->read_all_usuarios();
     $json = array();
     foreach ($usuario->objetos as $objeto) {
         $json[] = array(
-
             'id' => openssl_encrypt($objeto->id, CODE, KEY),
-            'user' => $objeto->user,
             'pass' => $objeto->pass,
             'nombres' => $objeto->nombres,
             'apellidos' => $objeto->apellidos,
-            'dni' => $objeto->dni,
             'email' => $objeto->email,
             'telefono' => $objeto->telefono,
-            'estado' => $objeto->estado
+            'tipo' => $objeto->tipo,      
         );
     }
     $jsonstring = json_encode($json);
     echo $jsonstring;
 }
-if ($_POST['funcion'] == 'crear_trabajador') {
-    $user = $_POST['user'];
+if ($_POST['funcion'] == 'crear_usuario') {
     $pass = $_POST['pass'];
     $nombres = $_POST['nombres'];
     $apellidos = $_POST['apellidos'];
-    $dni = $_POST['dni'];
     $email = $_POST['email'];
     $telefono = $_POST['telefono'];
-    $usuario->crear($user, $pass, $nombres, $apellidos, $dni, $email, $telefono);
+    $id_tipo = $_POST['tipo'];
+    $usuario->crear($pass, $nombres, $apellidos, $email, $telefono, $id_tipo);
     $json = array(
         'mensaje' => 'listo'
     );
     $jsonstring = json_encode($json);
     echo $jsonstring;
 }
-if ($_POST['funcion'] == 'eliminar_trabajador') {
+if ($_POST['funcion'] == 'editar_usuario') {
+    $formateado = str_replace(" ", "+", $_POST['id_usuario_mod']);
+    $id_usuario = openssl_decrypt($formateado, CODE, KEY);
+    $nombres = $_POST['nombres_mod'];
+    $apellidos = $_POST['apellidos_mod'];
+    $email = $_POST['email_mod'];
+    $telefono = $_POST['telefono_mod'];
+    $mensaje = '';
+    $usuario->obtener_usuario($id_usuario);
+    if ($nombres != $usuario->objetos[0]->nombres || $apellidos != $usuario->objetos[0]->apellidos || $email != $usuario->objetos[0]->email || $telefono != $usuario->objetos[0]->telefono) {
+        $usuario->editar($id_usuario, $nombres, $apellidos, $email, $telefono);
+        $mensaje = 'success';
+    } else {
+        $mensaje = 'danger';
+    }
+    $json = array(
+        'mensaje' => $mensaje
+    );
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
+}
+if ($_POST['funcion'] == 'eliminar_usuario') {
     $formateado = str_replace(" ", "+", $_POST['id']);
     $id_usuario = openssl_decrypt($formateado, CODE, KEY);
-    $usuario->eliminar_trabajador($id_usuario);
+    $usuario->eliminar_usuario($id_usuario);
     $mensaje='success';
     $json=array(
         'mensaje'=>$mensaje
@@ -140,28 +156,4 @@ if ($_POST['funcion'] == 'eliminar_trabajador') {
 if($_POST['funcion'] == 'tipo_usuario'){
     $tipo_usuario=$_SESSION['tipo_usuario'];
     echo $tipo_usuario;
-}
-if ($_POST['funcion'] == 'llenar_usuarios') {
-    $usuario->llenar_usuarios();
-    foreach ($usuario->objetos as $objeto) {
-        $json[] = array(
-            'id' => $objeto->id,
-            'nombres' => $objeto->nombres,
-            'apellidos' => $objeto->apellidos
-        );
-    }
-    $jsonstring = json_encode($json);
-    echo $jsonstring;
-}
-if ($_POST['funcion'] == 'llenar_usuarios_mod') {
-    $usuario->llenar_usuarios_mod();
-    foreach ($usuario->objetos as $objeto) {
-        $json[] = array(
-            'id' => $objeto->id,
-            'nombres' => $objeto->nombres,
-            'apellidos' => $objeto->apellidos
-        );
-    }
-    $jsonstring = json_encode($json);
-    echo $jsonstring;
 }

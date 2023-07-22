@@ -9,41 +9,34 @@ include_once 'Views/Layouts/header.php';
         <h1>Noticias Web</h1>
       </div>
     </div>
-  </div><!-- /.container-fluid -->
+  </div>
 </section>
-
 <style>
   .content {
     display: flex;
     flex-wrap: wrap;
   }
-
   .card {
     flex-basis: 50%;
     /* Los divs .card ocupan el 50% del ancho del contenedor */
     display: flex;
     flex-wrap: wrap;
   }
-
   .card-body {
     flex-basis: 50%;
   }
-
   .parrafo_noticia {
     flex-basis: 50%;
   }
-
   .titulo_noticia {
     font-weight: 800;
     font-size: 30px;
   }
-
   .parrafo_noticia {
     padding: 25px;
     text-align: justify;
   }
 </style>
-
 <section class="content">
   <div class="card">
     <div class="card-body">

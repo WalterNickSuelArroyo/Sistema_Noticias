@@ -65,35 +65,67 @@ class Usuario
             );
             $query->execute($variables);
     }
-    function read_all_trabajadores()
+    function read_all_usuarios()
     {
-        $sql = "SELECT * 
-                FROM usuario
-                WHERE estado='A'
-                AND id_tipo=2";
+        $sql = "SELECT u.id as id,
+                       u.pass as pass,
+                       u.nombres as nombres,
+                       u.apellidos as apellidos,
+                       u.email as email,
+                       u.telefono as telefono,
+                       tu.tipo as tipo
+                FROM usuario u
+                JOIN tipo_usuario tu ON tu.id=u.id_tipo
+                WHERE u.estado='A'";
         $query = $this->acceso->prepare($sql);
         $query->execute();
         $this->objetos = $query->fetchAll();
         return $this->objetos;
     }
-    function crear($user, $pass, $nombres, $apellidos, $dni, $email, $telefono,$id_tipo=2)
+    function crear($pass, $nombres, $apellidos, $email, $telefono,$id_tipo)
     {
-        $sql = "INSERT INTO usuario(user,pass,nombres,apellidos,dni,email,telefono,id_tipo)
-                VALUES(:user,:pass,:nombres,:apellidos,:dni,:email,:telefono,:id_tipo)";
+        $sql = "INSERT INTO usuario(pass,nombres,apellidos,email,telefono,id_tipo)
+                VALUES(:pass,:nombres,:apellidos,:email,:telefono,:id_tipo)";
         $query = $this->acceso->prepare($sql);
         $variables = array(
-            ':user' => $user,
             ':pass' => $pass,
             ':nombres' => $nombres,
             ':apellidos' => $apellidos,
-            ':dni' => $dni,
             ':email' => $email,
             ':telefono' => $telefono,
             ':id_tipo' => $id_tipo,
         );
         $query->execute($variables);
     }
-    function eliminar_trabajador($id_usuario)
+    function obtener_usuario($id_usuario)
+    {
+        $sql = "SELECT * 
+                FROM usuario
+                WHERE usuario.id=:id_usuario AND estado='A'";
+        $query = $this->acceso->prepare($sql);
+        $variables = array(
+            ':id_usuario' => $id_usuario,
+        );
+        $query->execute($variables);
+        $this->objetos = $query->fetchAll();
+        return $this->objetos;
+    }
+    function editar($id_usuario, $nombres, $apellidos, $email, $telefono)
+    {
+        if ($nombres != '' || $apellidos != '' || $email != '' || $telefono != '') {
+            $sql = "UPDATE usuario SET nombres=:nombres, apellidos=:apellidos, email=:email, telefono=:telefono  WHERE id=:id_usuario";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':nombres' => $nombres,
+                ':apellidos' => $apellidos,
+                ':email' => $email,
+                ':telefono' => $email,
+                ':id_usuario' => $id_usuario,
+            );
+            $query->execute($variables);
+        }
+    }
+    function eliminar_usuario($id_usuario)
     {
         $sql = "UPDATE usuario SET estado=:estado WHERE id=:id_usuario";
         $query = $this->acceso->prepare($sql);
@@ -104,16 +136,6 @@ class Usuario
         $query->execute($variables);
     }
     function llenar_usuarios()
-    {
-        $sql = "SELECT * 
-                FROM usuario
-                WHERE id_tipo = 2";
-        $query = $this->acceso->prepare($sql);
-        $query->execute();
-        $this->objetos = $query->fetchAll();
-        return $this->objetos;
-    }
-    function llenar_usuarios_mod()
     {
         $sql = "SELECT * 
                 FROM usuario

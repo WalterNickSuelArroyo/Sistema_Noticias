@@ -25,6 +25,11 @@
             $('#admin_usuarios').hide();
             $('#admin_citas').hide();
             $('#admin_noticias').hide();
+        }else {
+            $('#citaciones').hide();
+            $('#admin_usuarios').hide();
+            $('#admin_citas').hide();
+            $('#admin_noticias').hide();
         }
     })
 </script>

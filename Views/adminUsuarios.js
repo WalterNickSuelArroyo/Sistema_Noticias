@@ -1,28 +1,24 @@
 $(document).ready(function () {
     bsCustomFileInput.init();
     verificar_sesion();
-    read_all_camiones();
+    read_all_usuarios();
     function verificar_sesion() {
         funcion = 'verificar_sesion';
         $.post('../Controllers/UsuarioController.php', { funcion }, (response) => {
-            console.log(response);
             if (response != '') {
                 let sesion = JSON.parse(response);
                 $('#nav_login').hide();
                 $('#nav_register').hide();
-                $('#usuario_nav').text(sesion.user);
-                $('#avatar_nav').attr('src', '../Util/Img/Users/' + sesion.avatar);
-                $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
-                $('#usuario_menu').text(sesion.user);
+                $('#usuario_nav').text(sesion.nombres);
             } else {
                 $('#nav_usuario').hide();
                 location.href = 'login.php';
             }
         })
     }
-    async function read_all_camiones() {
-        funcion = "read_all_camiones";
-        let data = await fetch('../Controllers/CamionController.php', {
+    async function read_all_usuarios() {
+        funcion = "read_all_usuarios";
+        let data = await fetch('../Controllers/UsuarioController.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'funcion=' + funcion
@@ -30,19 +26,23 @@ $(document).ready(function () {
         if (data.ok) {
             let response = await data.text();
             try {
-                let camiones = JSON.parse(response);
-                $('#camion').DataTable({
-                    data: camiones,
+                let usuarios = JSON.parse(response);
+                $('#usuario').DataTable({
+                    data: usuarios,
                     "aaSorting": [],
                     "searching": true,
                     "scrollX": false,
                     "autoWidth": false,
                     columns: [
-                        { data: "placa" },
-                        { data: "marca" },
+                        { data: "nombres" },
+                        { data: "apellidos" },
+                        { data: "email" },
+                        { data: "telefono" },
+                        { data: "tipo" },
                         {
                             "render": function (data, type, datos, meta) {
-                                return `<button id="${datos.id}" placa="${datos.placa}" marca="${datos.marca}" estado="${datos.estado}" class="remove btn btn-danger" title="Eliminar camion" type="button"><i class="fas fa-trash-alt"></i></button>`
+                                return `<button id="${datos.id}" pass="${datos.pass}" nombres="${datos.nombres}" apellidos="${datos.apellidos}" email="${datos.email}" telefono="${datos.telefono}" tipo="${datos.tipo}" class="edit btn btn-info" title="Editar usuario" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_usuario"><i class="fas fa-pencil-alt"></i></button>
+                                    <button id="${datos.id}" pass="${datos.pass}" nombres="${datos.nombres}" apellidos="${datos.apellidos}" email="${datos.email}" telefono="${datos.telefono}" tipo="${datos.tipo}"  class="remove btn btn-danger" title="Eliminar usuario" type="button"><i class="fas fa-trash-alt"></i></button>`
                             }
                         }
                     ],
@@ -61,8 +61,8 @@ $(document).ready(function () {
             })
         }
     }
-    async function crear_camion(datos) {
-        let data = await fetch('../Controllers/CamionController.php', {
+    async function crear_usuario(datos) {
+        let data = await fetch('../Controllers/UsuarioController.php', {
             method: 'POST',
             body: datos
         })
@@ -74,12 +74,12 @@ $(document).ready(function () {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Se ha creado el camion',
+                        title: 'Se ha creado el usuario',
                         showConfirmButton: false,
                         timer: 1500
                     }).then(function () {
-                        read_all_camiones();
-                        $('#form-camion').trigger('reset');
+                        read_all_usuarios();
+                        $('#form-usuario').trigger('reset');
                     })
                 }
 
@@ -89,7 +89,7 @@ $(document).ready(function () {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No se pudo crear al camion, comuniquese con el area de soporte',
+                    text: 'No se pudo crear el usuario, comuniquese con el area de soporte',
                 })
             }
         } else {
@@ -102,26 +102,50 @@ $(document).ready(function () {
     }
     $.validator.setDefaults({
         submitHandler: function () {
-            let funcion = "crear_camion";
-            let datos = new FormData($('#form-camion')[0]);
+            let funcion = "crear_usuario";
+            let datos = new FormData($('#form-usuario')[0]);
             datos.append("funcion", funcion);
-            crear_camion(datos);
+            crear_usuario(datos);
         }
     });
-    $('#form-camion').validate({
+    $('#form-usuario').validate({
         rules: {
-            placa: {
+            nombres: {
                 required: true,
             },
-            marca: {
+            apellidos: {
+                required: true,
+            },
+            email: {
+                required: true,
+            },
+            pass: {
+                required: true,
+            },
+            telefono: {
+                required: true,
+            },
+            tipo: {
                 required: true,
             }
         },
         messages: {
-            placa: {
+            nombres: {
                 required: "Este campo es obligatorio"
             },
-            marca: {
+            apellidos: {
+                required: "Este campo es obligatorio"
+            },
+            email: {
+                required: "Este campo es obligatorio"
+            },
+            pass: {
+                required: "Este campo es obligatorio"
+            },
+            telefono: {
+                required: "Este campo es obligatorio"
+            },
+            tipo: {
                 required: "Este campo es obligatorio"
             }
         },
@@ -139,10 +163,123 @@ $(document).ready(function () {
             $(element).addClass('is-valid');
         }
     });
-    async function eliminar_camion(id) {
-        let funcion = "eliminar_camion";
+
+    $(document).on('click', '.edit', (e) => {
+        $('#form-usuario-mod').trigger('reset');
+        let elemento = $(this)[0].activeElement;
+        let id = $(elemento).attr('id');
+        let nombres = $(elemento).attr('nombres');
+        let apellidos = $(elemento).attr('apellidos');
+        let email = $(elemento).attr('email');
+        let telefono = $(elemento).attr('telefono');
+        $('#nombres_mod').val(nombres);
+        $('#apellidos_mod').val(apellidos);
+        $('#email_mod').val(email);
+        $('#telefono_mod').val(telefono);
+        $('#id_usuario_mod').val(id);
+    });
+    async function editar_usuario(datos) {
+        let data = await fetch('../Controllers/UsuarioController.php', {
+            method: 'POST',
+            body: datos
+        })
+        if (data.ok) {
+            let response = await data.text();
+            try {
+                let respuesta = JSON.parse(response);
+                if (respuesta.mensaje == 'success') {
+                    $('#form-usuario-mod').trigger('reset');
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha editado el usuario',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function () {
+                        read_all_usuarios();
+                        $('#form-usuario-mod').trigger('reset');
+                        $('#modal_editar_usuario').modal('hide');
+                    })
+                }
+                else if (respuesta.mensaje == 'danger') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No altero ningun cambio',
+                        text: 'Modifique algun cambio para realizar la edicion',
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se edito el usuario, comuniquese con el area de soporte',
+                })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo conflicto al editar datos, comuniquese con el area de soporte',
+            })
+        }
+    }
+    $.validator.setDefaults({
+        submitHandler: function () {
+            let funcion = "editar_usuario";
+            let datos = new FormData($('#form-usuario-mod')[0]);
+            datos.append('funcion', funcion);
+            editar_usuario(datos);
+        }
+    });
+    $('#form-usuario-mod').validate({
+        rules: {
+            nombres_mod: {
+                required: true,
+            },
+            apellidos_mod: {
+                required: true,
+            },
+            email_mod: {
+                required: true,
+            },
+            telefono_mod: {
+                required: true,
+            }
+        },
+        messages: {
+            nombres_mod: {
+                required: "Este campo es obligatorio"
+            },
+            apellidos_mod: {
+                required: "Este campo es obligatorio"
+            },
+            email_mod: {
+                required: "Este campo es obligatorio"
+            },
+            telefono_mod: {
+                required: "Este campo es obligatorio"
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+            $(element).removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+            $(element).addClass('is-valid');
+        }
+    });
+    async function eliminar_usuario(id) {
+        let funcion = "eliminar_usuario";
         let respuesta = '';
-        let data = await fetch('../Controllers/CamionController.php', {
+        let data = await fetch('../Controllers/UsuarioController.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'funcion=' + funcion + '&&id=' + id
@@ -160,7 +297,7 @@ $(document).ready(function () {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Hubo conflicto al eliminar sus datos, comuniquese con el area de soporte',
+                text: 'Hubo conflicto al eliminar usuario, comuniquese con el area de soporte',
             })
         }
         return respuesta;
@@ -168,9 +305,10 @@ $(document).ready(function () {
     $(document).on('click', '.remove', (e) => {
         let elemento = $(this)[0].activeElement;
         let id = $(elemento).attr('id');
-        let placa = $(elemento).attr('placa');
-        let marca = $(elemento).attr('marca');
-        let estado = $(elemento).attr('estado');
+        let nombres = $(elemento).attr('nombres');
+        let apellidos = $(elemento).attr('apellidos');
+        let email = $(elemento).attr('email');
+        let telefono = $(elemento).attr('telefono');
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-success',
@@ -180,7 +318,7 @@ $(document).ready(function () {
         })
 
         swalWithBootstrapButtons.fire({
-            title: '¿Deseas eliminar el camion de placa '+placa+ '?',
+            title: '¿Deseas eliminar el usuario ' + nombres + ' ' + apellidos + '?',
             text: "¡No podras revertir esto!",
             icon: 'warning',
             showCancelButton: true,
@@ -189,14 +327,14 @@ $(document).ready(function () {
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                eliminar_camion(id).then(respuesta => {
+                eliminar_usuario(id).then(respuesta => {
                     if (respuesta.mensaje == 'success') {
                         swalWithBootstrapButtons.fire(
                             '¡Borrado!',
-                            'El camion de placa ' + placa + ' fue borrado',
+                            'El usuario ' + nombres + ' ' + apellidos + ' fue borrado',
                             'success'
                         )
-                        read_all_camiones();
+                        read_all_usuarios();
                     }
                 });
             } else if (
@@ -204,7 +342,7 @@ $(document).ready(function () {
             ) {
                 swalWithBootstrapButtons.fire(
                     'Cancelado',
-                    'No se borro el camion',
+                    'No se borro el usuario',
                     'error'
                 )
             }
