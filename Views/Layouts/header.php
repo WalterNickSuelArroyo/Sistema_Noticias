@@ -54,18 +54,17 @@
       <div class="sidebar">
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li id="titulo_gestion_recursos" class="nav-header">GESTION RECURSOS</li>
-            <li id="gestion_zonas" class="nav-item">
-              <a href="Views/zonas.php" class="nav-link">
-                <i class="nav-icon fas fa-map-marker-alt"></i>
+            <li id="gestion_trabajadores" class="nav-item">
+              <a href="Views/noticias.php" class="nav-link">
+                <i class="nav-icon fas fa-user"></i>
                 <p>
                   Noticias
                 </p>
               </a>
             </li>
-            <li id="gestion_trabajadores" class="nav-item">
-              <a href="Views/zonas.php" class="nav-link">
-                <i class="nav-icon fas fa-user"></i>
+            <li id="gestion_zonas" class="nav-item">
+              <a href="Views/citas.php" class="nav-link">
+                <i class="nav-icon fas fa-map-marker-alt"></i>
                 <p>
                   Citaciones
                 </p>

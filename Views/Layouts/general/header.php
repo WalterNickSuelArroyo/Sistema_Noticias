@@ -59,17 +59,17 @@
         </div>
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-item" id="gestion_zonas">
-              <a href="zonas.php" class="nav-link">
-                <i class="nav-icon fas fa-map-marker-alt"></i>
+            <li class="nav-item" id="gestion_trabajadores">
+              <a href="noticias.php" class="nav-link">
+                <i class="nav-icon fas fa-user"></i>
                 <p>
                   Noticias
                 </p>
               </a>
             </li>
-            <li class="nav-item" id="gestion_trabajadores">
-              <a href="trabajadores.php" class="nav-link">
-                <i class="nav-icon fas fa-user"></i>
+            <li class="nav-item" id="gestion_zonas">
+              <a href="citas.php" class="nav-link">
+                <i class="nav-icon fas fa-map-marker-alt"></i>
                 <p>
                   Citaciones
                 </p>

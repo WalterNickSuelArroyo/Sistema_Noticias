@@ -1,28 +1,24 @@
 $(document).ready(function () {
     bsCustomFileInput.init();
     verificar_sesion();
-    read_all_zonas();
+    read_all_citas();
     function verificar_sesion() {
         funcion = 'verificar_sesion';
         $.post('../Controllers/UsuarioController.php', { funcion }, (response) => {
-            console.log(response);
             if (response != '') {
                 let sesion = JSON.parse(response);
                 $('#nav_login').hide();
                 $('#nav_register').hide();
-                $('#usuario_nav').text(sesion.user);
-                $('#avatar_nav').attr('src', '../Util/Img/Users/' + sesion.avatar);
-                $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
-                $('#usuario_menu').text(sesion.user);
+                $('#usuario_nav').text(sesion.nombres);
             } else {
                 $('#nav_usuario').hide();
                 location.href = 'login.php';
             }
         })
     }
-    async function read_all_zonas() {
-        funcion = "read_all_zonas";
-        let data = await fetch('../Controllers/ZonaController.php', {
+    async function read_all_citas() {
+        funcion = "read_all_citas";
+        let data = await fetch('../Controllers/CitaController.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'funcion=' + funcion
@@ -30,21 +26,20 @@ $(document).ready(function () {
         if (data.ok) {
             let response = await data.text();
             try {
-                let zonas = JSON.parse(response);
-                //console.log(zonas);
-                $('#zona').DataTable({
-                    data: zonas,
+                let citas = JSON.parse(response);
+                $('#cita').DataTable({
+                    data: citas,
                     "aaSorting": [],
                     "searching": true,
                     "scrollX": false,
                     "autoWidth": false,
                     columns: [
-                        { data: "nombre" },
-                        { data: "tipo" },
+                        { data: "fecha" },
+                        { data: "motivo" },
                         {
                             "render": function (data, type, datos, meta) {
-                                return `<button id="${datos.id}" nombre="${datos.nombre}" tipo="${datos.tipo}" class="edit btn btn-info" title="Editar zona" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_zona"><i class="fas fa-pencil-alt"></i></button>
-                                    <button id="${datos.id}" nombre="${datos.nombre}" tipo="${datos.tipo}" class="remove btn btn-danger" title="Eliminar zona" type="button"><i class="fas fa-trash-alt"></i></button>`
+                                return `<button id="${datos.id}" id_user="${datos.id_user}" fecha="${datos.fecha}" motivo="${datos.motivo}"  class="edit btn btn-info" title="Editar cita" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_cita"><i class="fas fa-pencil-alt"></i></button>
+                                    <button id="${datos.id}" id_user="${datos.id_user}" fecha="${datos.fecha}" motivo="${datos.motivo}"  class="remove btn btn-danger" title="Eliminar cita" type="button"><i class="fas fa-trash-alt"></i></button>`
                             }
                         }
                     ],
@@ -63,8 +58,8 @@ $(document).ready(function () {
             })
         }
     }
-    async function crear_zona(datos) {
-        let data = await fetch('../Controllers/ZonaController.php', {
+    async function crear_cita(datos) {
+        let data = await fetch('../Controllers/CitaController.php', {
             method: 'POST',
             body: datos
         })
@@ -76,12 +71,12 @@ $(document).ready(function () {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Se ha creado la zona',
+                        title: 'Se ha creado la cita',
                         showConfirmButton: false,
                         timer: 1500
                     }).then(function () {
-                        read_all_zonas();
-                        $('#form-zona').trigger('reset');
+                        read_all_citas();
+                        $('#form-cita').trigger('reset');
                     })
                 }
 
@@ -91,7 +86,7 @@ $(document).ready(function () {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No se pudo crear la zona, comuniquese con el area de soporte',
+                    text: 'No se pudo crear la cita, comuniquese con el area de soporte',
                 })
             }
         } else {
@@ -104,26 +99,26 @@ $(document).ready(function () {
     }
     $.validator.setDefaults({
         submitHandler: function () {
-            let funcion = "crear_zona";
-            let datos = new FormData($('#form-zona')[0]);
+            let funcion = "crear_cita";
+            let datos = new FormData($('#form-cita')[0]);
             datos.append("funcion", funcion);
-            crear_zona(datos);
+            crear_cita(datos);
         }
     });
-    $('#form-zona').validate({
+    $('#form-cita').validate({
         rules: {
-            nombre: {
+            fecha: {
                 required: true,
             },
-            tipo: {
+            motivo: {
                 required: true,
             }
         },
         messages: {
-            nombre: {
+            fecha: {
                 required: "Este campo es obligatorio"
             },
-            tipo: {
+            motivo: {
                 required: "Este campo es obligatorio"
             }
         },
@@ -141,18 +136,19 @@ $(document).ready(function () {
             $(element).addClass('is-valid');
         }
     });
+
     $(document).on('click', '.edit', (e) => {
-        $('#form-zona-mod').trigger('reset');
+        $('#form-cita-mod').trigger('reset');
         let elemento = $(this)[0].activeElement;
         let id = $(elemento).attr('id');
-        let nombre = $(elemento).attr('nombre');
-        let tipo = $(elemento).attr('tipo');
-        $('#nombre_mod').val(nombre);
-        $('#tipo_mod').val(tipo);
-        $('#id_zona_mod').val(id);
+        let fecha = $(elemento).attr('fecha');
+        let motivo = $(elemento).attr('motivo');
+        $('#fecha_mod').val(fecha);
+        $('#motivo_mod').val(motivo);
+        $('#id_cita_mod').val(id);
     });
-    async function editar_zona(datos) {
-        let data = await fetch('../Controllers/ZonaController.php', {
+    async function editar_cita(datos) {
+        let data = await fetch('../Controllers/CitaController.php', {
             method: 'POST',
             body: datos
         })
@@ -161,17 +157,17 @@ $(document).ready(function () {
             try {
                 let respuesta = JSON.parse(response);
                 if (respuesta.mensaje == 'success') {
-                    $('#form-zona-mod').trigger('reset');
+                    $('#form-cita-mod').trigger('reset');
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Se ha editado la zona',
+                        title: 'Se ha editado la cita',
                         showConfirmButton: false,
                         timer: 1500
                     }).then(function () {
-                        read_all_zonas();
-                        $('#form-zona-mod').trigger('reset');
-                        $('#modal_editar_zona').modal('hide');
+                        read_all_citas();
+                        $('#form-cita-mod').trigger('reset');
+                        $('#modal_editar_cita').modal('hide');
                     })
                 }
                 else if (respuesta.mensaje == 'danger') {
@@ -188,7 +184,7 @@ $(document).ready(function () {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No se pudo crear la zona, comuniquese con el area de soporte',
+                    text: 'No se pudo crear la cita, comuniquese con el area de soporte',
                 })
             }
         } else {
@@ -201,26 +197,26 @@ $(document).ready(function () {
     }
     $.validator.setDefaults({
         submitHandler: function () {
-            let funcion = "editar_zona";
-            let datos = new FormData($('#form-zona-mod')[0]);
+            let funcion = "editar_cita";
+            let datos = new FormData($('#form-cita-mod')[0]);
             datos.append('funcion', funcion);
-            editar_zona(datos);
+            editar_cita(datos);
         }
     });
-    $('#form-zona-mod').validate({
+    $('#form-cita-mod').validate({
         rules: {
-            nombre_mod: {
+            fecha_mod: {
                 required: true,
             },
-            tipo_mod: {
+            motivo_mod: {
                 required: true,
             }
         },
         messages: {
-            nombre_mod: {
+            fecha_mod: {
                 required: "Este campo es obligatorio"
             },
-            tipo_mod: {
+            motivo_mod: {
                 required: "Este campo es obligatorio"
             }
         },
@@ -238,10 +234,10 @@ $(document).ready(function () {
             $(element).addClass('is-valid');
         }
     });
-    async function eliminar_zona(id) {
-        let funcion = "eliminar_zona";
+    async function eliminar_cita(id) {
+        let funcion = "eliminar_cita";
         let respuesta = '';
-        let data = await fetch('../Controllers/ZonaController.php', {
+        let data = await fetch('../Controllers/CitaController.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'funcion=' + funcion + '&&id=' + id
@@ -267,8 +263,8 @@ $(document).ready(function () {
     $(document).on('click', '.remove', (e) => {
         let elemento = $(this)[0].activeElement;
         let id = $(elemento).attr('id');
-        let nombre = $(elemento).attr('nombre');
-        let tipo = $(elemento).attr('tipo');
+        let fecha = $(elemento).attr('fecha');
+        let motivo = $(elemento).attr('motivo');
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-success',
@@ -278,7 +274,7 @@ $(document).ready(function () {
         })
 
         swalWithBootstrapButtons.fire({
-            title: '¿Deseas eliminar la zona ' + nombre + '?',
+            title: '¿Deseas eliminar la cita ' + fecha + '?',
             text: "¡No podras revertir esto!",
             icon: 'warning',
             showCancelButton: true,
@@ -287,23 +283,22 @@ $(document).ready(function () {
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                eliminar_zona(id).then(respuesta => {
+                eliminar_cita(id).then(respuesta => {
                     if (respuesta.mensaje == 'success') {
                         swalWithBootstrapButtons.fire(
                             '¡Borrado!',
-                            'La zona ' + nombre + ' fue borrado',
+                            'La cita ' + fecha + ' fue borrado',
                             'success'
                         )
-                        read_all_zonas();
+                        read_all_citas();
                     }
                 });
             } else if (
-                /* Read more about handling dismissals below */
                 result.dismiss === Swal.DismissReason.cancel
             ) {
                 swalWithBootstrapButtons.fire(
                     'Cancelado',
-                    'No se borro la zona',
+                    'No se borro la cita',
                     'error'
                 )
             }

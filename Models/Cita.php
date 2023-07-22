@@ -1,6 +1,6 @@
 <?php
 include_once 'Conexion.php';
-class Zona
+class Cita
 {
     private $acceso;
 
@@ -10,32 +10,33 @@ class Zona
         $db = new Conexion();
         $this->acceso = $db->pdo;
     }
-    function read_all_zonas()
+    function read_all_citas()
     {
         $sql = "SELECT * 
-                FROM zona
+                FROM citas
                 WHERE estado='A'";
         $query = $this->acceso->prepare($sql);
         $query->execute();
         $this->objetos = $query->fetchAll();
         return $this->objetos;
     }
-    function crear($nombre, $tipo)
+    function crear($fecha, $motivo, $id_user)
     {
-        $sql = "INSERT INTO zona(nombre,tipo)
-                VALUES(:nombre,:tipo)";
+        $sql = "INSERT INTO citas(fecha,motivo,id_user)
+                VALUES(:fecha,:motivo,:id_user)";
         $query = $this->acceso->prepare($sql);
         $variables = array(
-            ':nombre' => $nombre,
-            ':tipo' => $tipo
+            ':fecha' => $fecha,
+            ':motivo' => $motivo,
+            ':id_user' => $id_user
         );
         $query->execute($variables);
     }
-    function obtener_zona($id)
+    function obtener_cita($id)
     {
         $sql = "SELECT * 
-                FROM zona
-                WHERE zona.id=:id AND estado='A'";
+                FROM citas
+                WHERE citas.id=:id AND estado='A'";
         $query = $this->acceso->prepare($sql);
         $variables = array(
             ':id' => $id,
@@ -44,42 +45,42 @@ class Zona
         $this->objetos = $query->fetchAll();
         return $this->objetos;
     }
-    function editar($id_zona, $nombre, $tipo)
+    function editar($id_cita, $fecha, $motivo)
     {
-        if ($nombre != '' || $tipo != '') {
-            $sql = "UPDATE zona SET nombre=:nombre, tipo=:tipo WHERE id=:id_zona";
+        if ($fecha != '' || $motivo != '') {
+            $sql = "UPDATE citas SET fecha=:fecha, motivo=:motivo WHERE id=:id_cita";
             $query = $this->acceso->prepare($sql);
             $variables = array(
-                ':nombre' => $nombre,
-                ':tipo' => $tipo,
-                ':id_zona' => $id_zona
+                ':fecha' => $fecha,
+                ':motivo' => $motivo,
+                ':id_cita' => $id_cita
             );
             $query->execute($variables);
         }
     }
-    function eliminar_zona($id_zona)
+    function eliminar_cita($id_cita)
     {
-        $sql = "UPDATE zona SET estado=:estado WHERE id=:id_zona";
+        $sql = "UPDATE citas SET estado=:estado WHERE id=:id_cita";
         $query = $this->acceso->prepare($sql);
         $variables = array(
-            ':id_zona' => $id_zona,
+            ':id_cita' => $id_cita,
             ':estado'=>'I'
         );
         $query->execute($variables);
     }
-    function llenar_zonas()
+    function llenar_citas()
     {
         $sql = "SELECT * 
-                FROM zona";
+                FROM citas";
         $query = $this->acceso->prepare($sql);
         $query->execute();
         $this->objetos = $query->fetchAll();
         return $this->objetos;
     }
-    function llenar_zonas_mod()
+    function llenar_citas_mod()
     {
         $sql = "SELECT * 
-                FROM zona";
+                FROM citas";
         $query = $this->acceso->prepare($sql);
         $query->execute();
         $this->objetos = $query->fetchAll();
