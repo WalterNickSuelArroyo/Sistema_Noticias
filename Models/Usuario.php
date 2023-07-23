@@ -138,8 +138,7 @@ class Usuario
     function llenar_usuarios()
     {
         $sql = "SELECT * 
-                FROM usuario
-                WHERE id_tipo = 2";
+                FROM usuario";
         $query = $this->acceso->prepare($sql);
         $query->execute();
         $this->objetos = $query->fetchAll();

@@ -1,6 +1,6 @@
 <?php
 include_once 'Conexion.php';
-class Cita
+class AdminCitas
 {
     private $acceso;
 
@@ -32,12 +32,7 @@ class Cita
         $sql = "INSERT INTO citas(fecha,motivo,id_user)
                 VALUES(:fecha,:motivo,:id_user)";
         $query = $this->acceso->prepare($sql);
-        $variables = array(
-            ':fecha' => $fecha,
-            ':motivo' => $motivo,
-            ':id_user' => $id_user
-        );
-        $query->execute($variables);
+        $query->execute(array(':fecha' => $fecha, ':motivo' => $motivo, ':id_user' => $id_user));
     }
     function obtener_cita($id)
     {
@@ -78,16 +73,8 @@ class Cita
     function llenar_citas()
     {
         $sql = "SELECT * 
-                FROM citas";
-        $query = $this->acceso->prepare($sql);
-        $query->execute();
-        $this->objetos = $query->fetchAll();
-        return $this->objetos;
-    }
-    function llenar_citas_mod()
-    {
-        $sql = "SELECT * 
-                FROM citas";
+                FROM citas
+                WHERE estado='A'";
         $query = $this->acceso->prepare($sql);
         $query->execute();
         $this->objetos = $query->fetchAll();

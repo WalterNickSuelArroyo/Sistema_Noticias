@@ -54,12 +54,17 @@ include_once 'Layouts/general/header.php';
     </div>
   </div>
 </div>
-<title>Citas | NoticiasWeb</title>
+<title>Admin. Citas | NoticiasWeb</title>
 <section class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1>Citas <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal_crear_cita">Agregar cita</button></h1>
+        <h1>Administracion de citas <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal_crear_cita">Agregar cita</button></h1>
+        <div class="row mt-3">
+          <div class="col-4">
+
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -157,3 +157,15 @@ if($_POST['funcion'] == 'tipo_usuario'){
     $tipo_usuario=$_SESSION['tipo_usuario'];
     echo $tipo_usuario;
 }
+if ($_POST['funcion'] == 'llenar_usuarios') {
+    $usuario->llenar_usuarios();
+    foreach ($usuario->objetos as $objeto) {
+        $json[] = array(
+            'id' => $objeto->id,
+            'nombres' => $objeto->nombres,
+            'apellidos' => $objeto->apellidos
+        );
+    }
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
+}

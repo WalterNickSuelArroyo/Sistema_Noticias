@@ -1,7 +1,7 @@
 <?php
 include_once 'Layouts/general/header.php';
 ?>
-<title>Trabajador | Sistema RBP</title>
+<title>Noticias | NoticiasWeb</title>
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">

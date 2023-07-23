@@ -28,4 +28,26 @@ class Noticia
         $this->objetos = $query->fetchAll();
         return $this->objetos;
     }
+    function crear($fecha, $titulo, $id_user)
+    {
+        $sql = "INSERT INTO noticias(fecha,titulo,id_user)
+                VALUES(:fecha,:titulo,:id_user)";
+        $query = $this->acceso->prepare($sql);
+        $variables = array(
+            ':fecha' => $fecha,
+            ':titulo' => $titulo,
+            ':id_user' => $id_user
+        );
+        $query->execute($variables);
+    }
+    function eliminar_noticia($id_noticia)
+    {
+        $sql = "UPDATE noticias SET estado=:estado WHERE id=:id_noticia";
+        $query = $this->acceso->prepare($sql);
+        $variables = array(
+            ':id_noticia' => $id_noticia,
+            ':estado'=>'I'
+        );
+        $query->execute($variables);
+    }
 }

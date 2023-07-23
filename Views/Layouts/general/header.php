@@ -55,7 +55,7 @@
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item" id="noticias_menu">
               <a href="noticias.php" class="nav-link">
-                <i class="nav-icon fas fa-user"></i>
+                <i class="nav-icon fas fa-newspaper"></i>
                 <p>
                   Noticias
                 </p>
@@ -71,23 +71,23 @@
             </li>
             <li class="nav-item" id="admin_usuarios">
               <a href="adminUsuarios.php" class="nav-link">
-                <i class="nav-icon fas fa-truck"></i>
+                <i class="nav-icon fas fa-user"></i>
                 <p>
                   Admin. de Usuarios
                 </p>
               </a>
             </li>
             <li class="nav-item" id="admin_citas">
-              <a href="camiones.php" class="nav-link">
-                <i class="nav-icon fas fa-truck"></i>
+              <a href="adminCitas.php" class="nav-link">
+                <i class="nav-icon fas fa-map-marker-alt"></i>
                 <p>
                   Admin. de Citas
                 </p>
               </a>
             </li>
             <li class="nav-item" id="admin_noticias">
-              <a href="camiones.php" class="nav-link">
-                <i class="nav-icon fas fa-truck"></i>
+              <a href="adminNoticias.php" class="nav-link">
+                <i class="nav-icon fas fa-newspaper"></i>
                 <p>
                   Admin. de Noticias
                 </p>

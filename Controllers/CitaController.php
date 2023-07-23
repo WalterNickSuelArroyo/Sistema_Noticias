@@ -36,7 +36,6 @@ if ($_POST['funcion'] == 'editar_cita') {
     $fecha = $_POST['fecha_mod'];
     $motivo = $_POST['motivo_mod'];
     $mensaje = '';
-    $datos_cambiados = 'Ha hecho los siguientes cambios';
     $cita->obtener_cita($id_cita);
     if ($fecha != $cita->objetos[0]->fecha || $motivo != $cita->objetos[0]->motivo) {
         $cita->editar($id_cita, $fecha, $motivo);
